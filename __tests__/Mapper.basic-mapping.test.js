@@ -26,12 +26,14 @@ describe('[UNIT] - Basic mapping', function () {
     expect(dto.address).not.toBeUndefined();
     expect(dto.location).not.toBeUndefined();
     expect(dto.employees).not.toBeUndefined();
+    expect(Object.keys(dto).length).toBe(3);
   });
   it('1st level with non-present properties', function () {
     const dto = Mapper().map(createIncompleteFakeBasicSuperMarketEntity(), BasicSuperMarketDto).get();
     expect(dto.address).not.toBeUndefined();
     expect(dto.location).toBeUndefined();
     expect(dto.employees).not.toBeUndefined();
+    expect(Object.keys(dto).length).toBe(3);
   });
   it('1st level with ignoreUnknownProperties() chaining', function () {
     const dto = Mapper()
@@ -39,7 +41,7 @@ describe('[UNIT] - Basic mapping', function () {
       .ignoreUnknownProperties()
       .get();
     expect(dto.address).not.toBeUndefined();
-    expect(dto.location).toBeUndefined();
     expect(dto.employees).not.toBeUndefined();
+    expect(Object.keys(dto).length).toBe(2);
   });
 });
