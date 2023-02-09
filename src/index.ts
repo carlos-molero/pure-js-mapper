@@ -1,30 +1,55 @@
-const Mapper = function () {
-  let result: any;
-  let ignoreUnknownProperties = false;
-  const mappings: { property: string; target: any }[] = [];
+type Class<T> = new (...args: any[]) => T;
+type MapperGlobals = {
+  ignoreUnknownProperties?: boolean;
+};
 
-  function isObject(property: any) {
+let _globals: MapperGlobals = {};
+
+const Mapper = function () {
+  let _result: Record<any, any>;
+  let _ignoreUnknownProperties = false;
+  const _mappings: { property: string; target: any }[] = [];
+
+  /**
+   * Checks if a property inside a given object is an object itself.
+   *
+   * @param {any} property
+   * @returns {boolean} true or false
+   */
+  function isObject(property: any): boolean {
     return typeof property === 'object';
   }
 
-  function removeUnknownProperties(obj = result): any {
+  /**
+   * Deletes undefined or null properties recursively from an object.
+   *
+   * @param {Record<any, any>} obj
+   * @returns {Record<any, any>} the modified object
+   */
+  function deleteUndefinedOrNullProperties(obj: Record<any, any> = _result): Record<any, any> {
     const keys = Object.keys(obj);
     keys.forEach((key) => {
       const val = obj[key];
       if (!val) {
         delete obj[key];
       } else if (isObject(val)) {
-        obj[key] = removeUnknownProperties(val);
+        obj[key] = deleteUndefinedOrNullProperties(val);
       }
     });
     return obj;
   }
 
-  function applyMappings(obj = result) {
+  /**
+   * Maps nested properties to the given mappings DTO classes recursively.
+   *
+   * @param {Record<any, any>} obj
+   * @returns {Record<any, any>} the modified object
+   */
+  function applyMappings(obj: Record<any, any> = _result): Record<any, any> {
     const keys = Object.keys(obj);
     keys.forEach((key) => {
       const val = obj[key];
-      const mapping = mappings.find((m) => m.property === key);
+      const mapping = _mappings.find((m) => m.property === key);
       if (mapping && isObject(val)) {
         obj[key] = Array.isArray(val)
           ? val.map((rk: any) => new mapping.target({ ...rk }))
@@ -38,28 +63,73 @@ const Mapper = function () {
   }
 
   return {
-    map(objA: any, objB: any) {
-      result = new objB({ ...objA });
+    /**
+     * Sets the global configuration for the Mapper() function.
+     * This configuration will persist through function calls.
+     *
+     * @param globals.ignoreUnknownProperties
+     */
+    Globals(globals: MapperGlobals): void {
+      _globals = {
+        ..._globals,
+        ...globals,
+      };
+    },
+    /**
+     * Returns the global configuration for the Mapper() function.
+     *
+     * @returns {MapperGlobals} Mapper global options.
+     */
+    getGlobals(): MapperGlobals {
+      return _globals;
+    },
+    /**
+     * Maps an object to another.
+     *
+     * @param objA Can be an initialized class instance or an object.
+     * @param objB Must be a class reference.
+     * @returns {Mapper} Mapper
+     */
+    map(objA: Record<any, any>, objB: Class<any>) {
+      _result = new objB({ ...objA });
       return this;
     },
-    setMapping(key: string, obj: any) {
-      mappings.push({ property: key, target: obj });
+    /**
+     * Sets a mapping, useful if you need to map subproperties of your object to given DTO classes.
+     * You can chain as many mappings as you want.
+     *
+     * @param {string} key The key of the property that should be mapped to the passed DTO class object.
+     * @param {string} obj Must be a class reference.
+     * @returns {Mapper} Mapper
+     */
+    setMapping(key: string, obj: Class<any>) {
+      _mappings.push({ property: key, target: obj });
       return this;
     },
+    /**
+     * Sets the ignoreUnknownProperties option to true for this mapping.
+     *
+     * @returns {Mapper} Mapper
+     */
     ignoreUnknownProperties() {
-      ignoreUnknownProperties = true;
+      _ignoreUnknownProperties = true;
       return this;
     },
-    get() {
-      if (mappings.length > 0) {
+    /**
+     * Gets the mapping result.
+     *
+     * @returns {Record<any,any>} result
+     */
+    get(): Record<any, any> {
+      if (_mappings.length > 0) {
         applyMappings();
       }
 
-      if (ignoreUnknownProperties) {
-        removeUnknownProperties();
+      if (_globals.ignoreUnknownProperties === true || _ignoreUnknownProperties) {
+        deleteUndefinedOrNullProperties();
       }
 
-      return result;
+      return _result;
     },
   };
 };

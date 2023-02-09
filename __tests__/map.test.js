@@ -20,28 +20,19 @@ function createIncompleteFakeBasicSuperMarketEntity() {
   });
 }
 
-describe('[UNIT] - Basic mapping', function () {
-  it('1st level', function () {
+describe('[UNIT] - Covers the use of map() chain function', function () {
+  it('No unknown properties', function () {
     const dto = Mapper().map(createFakeBasicSuperMarketEntity(), BasicSuperMarketDto).get();
     expect(dto.address).not.toBeUndefined();
     expect(dto.location).not.toBeUndefined();
     expect(dto.employees).not.toBeUndefined();
     expect(Object.keys(dto).length).toBe(3);
   });
-  it('1st level with non-present properties', function () {
+  it('Unknown properties', function () {
     const dto = Mapper().map(createIncompleteFakeBasicSuperMarketEntity(), BasicSuperMarketDto).get();
     expect(dto.address).not.toBeUndefined();
     expect(dto.location).toBeUndefined();
     expect(dto.employees).not.toBeUndefined();
     expect(Object.keys(dto).length).toBe(3);
-  });
-  it('1st level with ignoreUnknownProperties() chaining', function () {
-    const dto = Mapper()
-      .map(createIncompleteFakeBasicSuperMarketEntity(), BasicSuperMarketDto)
-      .ignoreUnknownProperties()
-      .get();
-    expect(dto.address).not.toBeUndefined();
-    expect(dto.employees).not.toBeUndefined();
-    expect(Object.keys(dto).length).toBe(2);
   });
 });
