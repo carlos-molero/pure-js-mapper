@@ -57,7 +57,7 @@ The `setMapping()` function allow nested values of your entity not to be added t
 
 To add mappings you can use the `setMapping()` method as many times as you want indicating the property that contains the object to be transformed and the class to which it should be mapped (your DTO).
 
-This works only with 1st level nestings at this moment.
+This works with all nesting levels.
 
 ```javascript
 // MyEntityDTO.js
