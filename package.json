@@ -1,11 +1,11 @@
 {
   "name": "@carlosmta/pure-js-mapper",
-  "version": "0.0.6-beta",
+  "version": "0.0.7-beta",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "repository": "git@github.com:carlos-molero/pure-js-mapper.git",
   "author": "carlos-molero <carlos.mta@outlook.es>",
-  "license": "ISC",
+  "license": "MIT",
   "homepage": "https://github.com/carlos-molero/pure-js-mapper",
   "keywords": [
     "mapper",
@@ -34,6 +34,7 @@
     "typescript": "^4.9.5"
   },
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "LICENSE.md"
   ]
 }

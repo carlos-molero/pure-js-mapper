@@ -2,9 +2,7 @@
 
 [![Tests](https://github.com/carlos-molero/pure-js-mapper/actions/workflows/test.yml/badge.svg)](https://github.com/carlos-molero/pure-js-mapper/actions/workflows/test.yml)
 
-Pure JS Mapper, as its name suggests, is a mapping library for converting entity classes to DTO classes and vice versa that can be used in projects written only with Javascript.
-
-The library exposes a `Mapper()` function that provides the developer with functions that can be chained together to achieve mappings.
+Pure JS Mapper, as its name suggests, is a mapping library for converting entity to DTO classes and vice versa that can be used in projects written only with Javascript.
 
 ## Installation
 
@@ -38,11 +36,19 @@ const myDto = Mapper().map(MyEntity, MyEntityDTO).get();
 
 ## API
 
-As mentioned above there are some chained functions that can be used as a result of the `Mapper()` function.
+There are some chained functions that can be used as a result of the `Mapper()` function call.
+
+### Global properties
+
+At the moment you can set the `ignoreUnknownProperties` option globally the following way:
+
+```javascript
+Mapper().Globals({ ignoreUnknownProperties: true });
+```
 
 ### Ignoring `undefined` or `null` properties
 
-You may want to ignore some properties that your entity does not have set or that are set to null. To do this you can chain `map()` with `ignoreUnknownProperties()` to remove them from your dto.
+You may want to ignore some properties that your object does not have set or that are set to null. To do this you can chain `map()` with `ignoreUnknownProperties()` to remove them from your dto.
 
 This works with all nesting levels.
 
@@ -69,7 +75,7 @@ const myDto = Mapper().map(MyEntity, MyEntityDTO).ignoreUnknownProperties().get(
 
 The `setMapping()` function allow nested values of your entity not to be added to the DTO with all its properties but to be mapped according to a specified DTO class.
 
-To add mappings you can use the `setMapping()` method as many times as you want indicating the property that contains the object to be transformed and the class to which it should be mapped (your DTO).
+To add mappings you can use the `setMapping()` method as many times as you want indicating the property that contains the object to be mapped and the class to which it should be mapped (your DTO in this case).
 
 This works with all nesting levels.
 
