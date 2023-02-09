@@ -3,12 +3,12 @@ type MapperGlobals = {
   ignoreUnknownProperties?: boolean;
 };
 
-let Globals: MapperGlobals = {};
+let _globals: MapperGlobals = {};
 
 const Mapper = function () {
-  let result: Record<any, any>;
-  let ignoreUnknownProperties = false;
-  const mappings: { property: string; target: any }[] = [];
+  let _result: Record<any, any>;
+  let _ignoreUnknownProperties = false;
+  const _mappings: { property: string; target: any }[] = [];
 
   /**
    * Checks if a property inside a given object is an object itself.
@@ -26,7 +26,7 @@ const Mapper = function () {
    * @param {Record<any, any>} obj
    * @returns {Record<any, any>} the modified object
    */
-  function deleteUndefinedOrNullProperties(obj: Record<any, any> = result): Record<any, any> {
+  function deleteUndefinedOrNullProperties(obj: Record<any, any> = _result): Record<any, any> {
     const keys = Object.keys(obj);
     keys.forEach((key) => {
       const val = obj[key];
@@ -45,11 +45,11 @@ const Mapper = function () {
    * @param {Record<any, any>} obj
    * @returns {Record<any, any>} the modified object
    */
-  function applyMappings(obj: Record<any, any> = result): Record<any, any> {
+  function applyMappings(obj: Record<any, any> = _result): Record<any, any> {
     const keys = Object.keys(obj);
     keys.forEach((key) => {
       const val = obj[key];
-      const mapping = mappings.find((m) => m.property === key);
+      const mapping = _mappings.find((m) => m.property === key);
       if (mapping && isObject(val)) {
         obj[key] = Array.isArray(val)
           ? val.map((rk: any) => new mapping.target({ ...rk }))
@@ -70,8 +70,8 @@ const Mapper = function () {
      * @param globals.ignoreUnknownProperties
      */
     Globals(globals: MapperGlobals): void {
-      Globals = {
-        ...Globals,
+      _globals = {
+        ..._globals,
         ...globals,
       };
     },
@@ -81,7 +81,7 @@ const Mapper = function () {
      * @returns {MapperGlobals} Mapper global options.
      */
     getGlobals(): MapperGlobals {
-      return Globals;
+      return _globals;
     },
     /**
      * Maps an object to another.
@@ -90,8 +90,8 @@ const Mapper = function () {
      * @param objB Must be a class reference.
      * @returns {Mapper} Mapper
      */
-    map(objA: Object, objB: Class<any>) {
-      result = new objB({ ...objA });
+    map(objA: Record<any, any>, objB: Class<any>) {
+      _result = new objB({ ...objA });
       return this;
     },
     /**
@@ -103,7 +103,7 @@ const Mapper = function () {
      * @returns {Mapper} Mapper
      */
     setMapping(key: string, obj: Class<any>) {
-      mappings.push({ property: key, target: obj });
+      _mappings.push({ property: key, target: obj });
       return this;
     },
     /**
@@ -112,7 +112,7 @@ const Mapper = function () {
      * @returns {Mapper} Mapper
      */
     ignoreUnknownProperties() {
-      ignoreUnknownProperties = true;
+      _ignoreUnknownProperties = true;
       return this;
     },
     /**
@@ -121,15 +121,15 @@ const Mapper = function () {
      * @returns {Record<any,any>} result
      */
     get(): Record<any, any> {
-      if (mappings.length > 0) {
+      if (_mappings.length > 0) {
         applyMappings();
       }
 
-      if (Globals.ignoreUnknownProperties === true || ignoreUnknownProperties) {
+      if (_globals.ignoreUnknownProperties === true || _ignoreUnknownProperties) {
         deleteUndefinedOrNullProperties();
       }
 
-      return result;
+      return _result;
     },
   };
 };
