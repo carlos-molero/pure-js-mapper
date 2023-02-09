@@ -23,7 +23,7 @@ yarn add @carlosmta/pure-js-mapper
 ## Usage
 
 ```javascript
-import Mapper from '@carlosmta/pure-js-mapper';
+const Mapper = require('@carlosmta/pure-js-mapper').default;
 
 const MyEntity = new MyEntity({
   property1: 'property1',
