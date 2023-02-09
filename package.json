@@ -1,6 +1,6 @@
 {
   "name": "@carlosmta/pure-js-mapper",
-  "version": "0.0.7-beta",
+  "version": "0.0.8-beta",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "repository": "git@github.com:carlos-molero/pure-js-mapper.git",
@@ -17,7 +17,7 @@
   },
   "scripts": {
     "test": "jest --config jestconfig.json",
-    "build": "tsc",
+    "build": "rm -rf lib/* && tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "yarn build",
