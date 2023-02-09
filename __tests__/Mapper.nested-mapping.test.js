@@ -79,30 +79,30 @@ describe('[UNIT] - Nested mapping', function () {
     expect(dto.employees.every((employee) => Object.keys(employee).length === 5)).toBeTruthy();
   });
 
-  it('Nested mapping with set() chaining', function () {
+  it('Nested mapping with setMapping() chaining', function () {
     const dto = Mapper()
       .map(createFakeBasicSuperMarketEntity(), BasicSuperMarketDto)
-      .set('employees', BasicEmployeeDto)
+      .setMapping('employees', BasicEmployeeDto)
       .get();
     expect(dto.employees.length).toBe(10);
     expect(dto.employees.every((employee) => Object.keys(employee).length === 5)).toBeTruthy();
   });
 
-  it('Nested mapping with set() and ignoreUnknownProperties() chaining', function () {
+  it('Nested mapping with setMapping() and ignoreUnknownProperties() chaining', function () {
     const dto = Mapper()
       .map(createFakeBasicSuperMarketEntity(), BasicSuperMarketDto)
       .ignoreUnknownProperties()
-      .set('employees', BasicEmployeeDto)
+      .setMapping('employees', BasicEmployeeDto)
       .get();
     expect(dto.employees.length).toBe(10);
     expect(dto.employees.every((employee) => Object.keys(employee).length === 3)).toBeTruthy();
   });
-  it('Nested with 2 levels with set() and ignoreUnknownProperties() chaining', function () {
+  it('Nested with 2 levels with setMapping() and ignoreUnknownProperties() chaining', function () {
     const dto = Mapper()
       .map(createFakeBasicSuperMarketEntityWith2LevelNesting(), BasicSuperMarketDto)
       .ignoreUnknownProperties()
-      .set('employees', BasicEmployeeDto)
-      .set('managers', BasicManagerDto)
+      .setMapping('employees', BasicEmployeeDto)
+      .setMapping('managers', BasicManagerDto)
       .get();
     expect(dto.employees.length).toBe(10);
     expect(dto.employees.every((employee) => Object.keys(employee).length === 4)).toBeTruthy();

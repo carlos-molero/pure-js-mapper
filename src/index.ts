@@ -1,7 +1,7 @@
 const Mapper = function () {
   let result: any = undefined;
   let ignoreUnknownProperties = false;
-  let transformers: Array<{ property: string; target: any }> = [];
+  let mappings: Array<{ property: string; target: any }> = [];
 
   function isObject(property: any) {
     return typeof property === 'object';
@@ -20,16 +20,16 @@ const Mapper = function () {
     return obj;
   }
 
-  function applyTransformers(obj = result) {
+  function applyMappings(obj = result) {
     const keys = Object.keys(obj);
     keys.forEach((key) => {
       const val = obj[key];
-      const t = transformers.find((t) => t.property === key);
-      if (t && isObject(val)) {
-        obj[key] = Array.isArray(val) ? val.map((rk: any) => new t.target({ ...rk })) : new t.target({ ...val });
+      const m = mappings.find((m) => m.property === key);
+      if (m && isObject(val)) {
+        obj[key] = Array.isArray(val) ? val.map((rk: any) => new m.target({ ...rk })) : new m.target({ ...val });
       }
       if (isObject(val)) {
-        applyTransformers(obj[key]);
+        applyMappings(obj[key]);
       }
     });
     return obj;
@@ -40,8 +40,8 @@ const Mapper = function () {
       result = new objB({ ...objA });
       return this;
     },
-    set: function (key: string, obj: any) {
-      transformers.push({ property: key, target: obj });
+    setMapping: function (key: string, obj: any) {
+      mappings.push({ property: key, target: obj });
       return this;
     },
     ignoreUnknownProperties: function () {
@@ -49,8 +49,8 @@ const Mapper = function () {
       return this;
     },
     get: function () {
-      if (transformers.length > 0) {
-        applyTransformers();
+      if (mappings.length > 0) {
+        applyMappings();
       }
 
       if (ignoreUnknownProperties) {
