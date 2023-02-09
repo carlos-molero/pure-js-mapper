@@ -2,18 +2,26 @@
   "name": "@carlosmolero/pure-js-mapper",
   "version": "0.0.1-beta",
   "main": "index.js",
+  "types": "index.d.ts",
   "repository": "git@github.com:carlos-molero/pure-js-mapper.git",
   "author": "carlos-molero <carlos.mta@outlook.es>",
   "license": "ISC",
-  "homepage": "git@github.com:carlos-molero/pure-js-mapper.git#readme",
+  "homepage": "https://github.com/carlos-molero/pure-js-mapper",
+  "keywords": [
+    "mapper",
+    "js-only",
+    "dto"
+  ],
   "bugs": {
-    "url": "git@github.com:carlos-molero/pure-js-mapper.git/issues"
+    "url": "https://github.com/carlos-molero/pure-js-mapper/issues"
   },
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig.json"
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "yarn build",
+    "prepublishOnly": "yarn test && yarn lint"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
