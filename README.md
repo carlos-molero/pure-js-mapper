@@ -6,10 +6,24 @@ Pure JS Mapper, as its name suggests, is a mapping library for converting entity
 
 The library exposes a `Mapper()` function that provides the developer with functions that can be chained together to achieve mappings.
 
+## Installation
+
+npm
+
+```bash
+npm i @carlosmta/pure-js-mapper
+```
+
+yarn
+
+```bash
+yarn add @carlosmta/pure-js-mapper
+```
+
 ## Usage
 
 ```javascript
-import Mapper from '@carlos-molero/pure-js-mapper';
+import Mapper from '@carlosmta/pure-js-mapper';
 
 const MyEntity = new MyEntity({
   property1: 'property1',
