@@ -1,7 +1,7 @@
 const Mapper = function () {
-  let result: any = undefined;
+  let result: any;
   let ignoreUnknownProperties = false;
-  let mappings: Array<{ property: string; target: any }> = [];
+  const mappings: { property: string; target: any }[] = [];
 
   function isObject(property: any) {
     return typeof property === 'object';
@@ -24,9 +24,11 @@ const Mapper = function () {
     const keys = Object.keys(obj);
     keys.forEach((key) => {
       const val = obj[key];
-      const m = mappings.find((m) => m.property === key);
-      if (m && isObject(val)) {
-        obj[key] = Array.isArray(val) ? val.map((rk: any) => new m.target({ ...rk })) : new m.target({ ...val });
+      const mapping = mappings.find((m) => m.property === key);
+      if (mapping && isObject(val)) {
+        obj[key] = Array.isArray(val)
+          ? val.map((rk: any) => new mapping.target({ ...rk }))
+          : new mapping.target({ ...val });
       }
       if (isObject(val)) {
         applyMappings(obj[key]);
@@ -36,19 +38,19 @@ const Mapper = function () {
   }
 
   return {
-    map: function (objA: any, objB: any) {
+    map(objA: any, objB: any) {
       result = new objB({ ...objA });
       return this;
     },
-    setMapping: function (key: string, obj: any) {
+    setMapping(key: string, obj: any) {
       mappings.push({ property: key, target: obj });
       return this;
     },
-    ignoreUnknownProperties: function () {
+    ignoreUnknownProperties() {
       ignoreUnknownProperties = true;
       return this;
     },
-    get: function () {
+    get() {
       if (mappings.length > 0) {
         applyMappings();
       }
