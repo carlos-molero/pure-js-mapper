@@ -90,9 +90,8 @@ export default class MyEntityDTO {
 
 // MySubEntityDTO.js
 export default class MySubEntityDTO {
-  constructor({ subProperty1, subProperty2 }) {
+  constructor({ subProperty1 }) {
     this.subProperty1 = subProperty1;
-    this.subProperty2 = subProperty2;
   }
 }
 
@@ -107,8 +106,29 @@ const MyEntity = new MyEntity({
 const myDto = Mapper()
 .map(MyEntity, MyEntityDTO)
 .setMapping('mySubEntity', MySubEntityDTO)
-.ignoreUnknownProperties()
 .get();
 
 // { property1: 'property1', mySubEntity: { subProperty1: 'subProperty1' } }
+```
+
+### Using aliases
+
+Aliases work only in the first level of the object we are trying to map, they are useful when some properties of the source object have a different name than their corresponding mapping to the target object.
+
+```javascript
+// MyEntityDTO.js
+export default class MyEntityDTO {
+  constructor({ property1, property2 }) {
+    this.property2 = property2;
+  }
+}
+
+const MyEntity = new MyEntity({
+  property1: 'property1',
+  //...
+});
+
+const myDto = Mapper().map(MyEntity, MyEntityDTO).setAlias('property1', 'property2').get();
+
+// { property1: 'property2' }
 ```
