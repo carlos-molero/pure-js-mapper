@@ -1,6 +1,6 @@
 {
   "name": "@carlosmta/pure-js-mapper",
-  "version": "0.1.0-beta",
+  "version": "0.2.0-beta",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "repository": "git@github.com:carlos-molero/pure-js-mapper.git",
