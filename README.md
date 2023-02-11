@@ -18,29 +18,50 @@ yarn
 yarn add @carlosmta/pure-js-mapper
 ```
 
+## Importing/Requiring
+
+The library output is CommonJS for maximum compatibility.
+
+```javascript
+const Mapper = require('@carlosmta/pure-js-mapper').default; // CommonJS
+import Mapper from '@carlosmta/pure-js-mapper'; // ES
+```
+
 ## Usage
 
 ```javascript
-const Mapper = require('@carlosmta/pure-js-mapper').default;
+// SupermarketDto.js
+export default class SuperMarketDto {
+  constructor({ address, location, employees }) {
+    this.address = address;
+    this.location = location;
+    this.employees = employees;
+  }
+}
 
-const MyEntity = new MyEntity({
-  property1: 'property1',
-  property2: 'property2',
-  //...
-});
+const Supermarket = {
+  address: 'X Street',
+  location: 'Spain',
+};
 
-const myDto = Mapper().map(MyEntity, MyEntityDTO).get();
+const dto = Mapper().map(Supermarket, SupermarketDto).get();
 
-// { property1: 'property1', 'property2: 'property2' }
+// Outputs
+
+{
+  address: 'X Street',
+  location: 'Spain',
+  employees: undefined
+}
 ```
 
 ## API
 
-There are some chained functions that can be used as a result of the `Mapper()` function call.
+There are several chained functions that can be used to modify the output.
 
 ### Global properties
 
-At the moment you can set the `ignoreUnknownProperties` option globally the following way:
+You can set the `ignoreUnknownProperties` option globally the following way:
 
 ```javascript
 Mapper().Globals({ ignoreUnknownProperties: true });
@@ -53,22 +74,28 @@ You may want to ignore some properties that your object does not have set or tha
 This works with all nesting levels.
 
 ```javascript
-// MyEntityDTO.js
-export default class MyEntityDTO {
-  constructor({ property1, property2 }) {
-    this.property1 = property1;
-    this.property2 = property2;
+// SupermarketDto.js
+export default class SuperMarketDto {
+  constructor({ address, location, employees }) {
+    this.address = address;
+    this.location = location;
+    this.employees = employees;
   }
 }
 
-const MyEntity = new MyEntity({
-  property1: 'property1',
-  //...
-});
+const Supermarket = {
+  address: 'X Street',
+  location: 'Spain',
+};
 
-const myDto = Mapper().map(MyEntity, MyEntityDTO).ignoreUnknownProperties().get();
+const dto = Mapper().map(Supermarket, SupermarketDto).ignoreUnkownProperties().get();
 
-// { property1: 'property1' }
+// Outputs
+
+{
+  address: 'X Street',
+  location: 'Spain',
+}
 ```
 
 ### Using mappings
@@ -80,55 +107,85 @@ To add mappings you can use the `setMapping()` method as many times as you want 
 This works with all nesting levels.
 
 ```javascript
-// MyEntityDTO.js
-export default class MyEntityDTO {
-  constructor({ property1, property2 }) {
-    this.property1 = property1;
-    this.property2 = property2;
+// SupermarketDto.js
+export default class SuperMarketDto {
+  constructor({ address, location, employees }) {
+    this.address = address;
+    this.location = location;
+    this.employees = employees;
   }
 }
 
-// MySubEntityDTO.js
-export default class MySubEntityDTO {
-  constructor({ subProperty1 }) {
-    this.subProperty1 = subProperty1;
+// EmployeeDto.js
+export default class EmployeeDto {
+  constructor({ name, surnames, email, phone, managers }) {
+    this.name = name;
+    this.email = email;
+    this.phone = phone;
   }
 }
 
-const MyEntity = new MyEntity({
-  property1: 'property1',
-  mySubEntity: {
-    subProperty1: 'subProperty1',
-  }
-  //...
-});
 
-const myDto = Mapper()
-.map(MyEntity, MyEntityDTO)
-.setMapping('mySubEntity', MySubEntityDTO)
-.get();
+const Supermarket = {
+  address: 'X Street',
+  location: 'Spain',
+  employees: [
+    {
+      name: 'Carlos',
+      email: 'carlos@carlos.com',
+      phone: '+34 213 12 321',
+      password: '1234'
+    }
+  ]
+};
 
-// { property1: 'property1', mySubEntity: { subProperty1: 'subProperty1' } }
+const dto = Mapper().map(Supermarket, SupermarketDto).setMapping('employees', EmployeeDto).get();
+
+// Outputs
+
+{
+  address: 'X Street',
+  location: 'Spain',
+  employees: [
+    {
+      name: 'Carlos',
+      email: 'carlos@carlos.com',
+      phone: '+34 213 12 321',
+      password: undefined
+    }
+  ]
+}
 ```
 
 ### Using aliases
 
-Aliases work only in the first level of the object we are trying to map, they are useful when some properties of the source object have a different name than their corresponding mapping to the target object.
+Aliases functionality uses `lodash` under the hood. You can set the path to the value in the source object that should be mapped to a property in your target class.
 
 ```javascript
-// MyEntityDTO.js
-export default class MyEntityDTO {
-  constructor({ property1, property2 }) {
-    this.property2 = property2;
+// SupermarketDto.js
+export default class SuperMarketDto {
+  constructor({ address, location, employees }) {
+    this.address = address;
+    this.location = location;
+    this.employees = employees;
   }
 }
 
-const MyEntity = new MyEntity({
-  property1: 'property1',
-  //...
-});
+const Supermarket = {
+  address: 'X Street',
+  location: 'Spain',
+  count: {
+    employeeNumber: 10
+  }
+};
 
-const myDto = Mapper().map(MyEntity, MyEntityDTO).setAlias('property1', 'property2').get();
+const dto = Mapper().map(Supermarket, SupermarketDto).setAlias("count.employeeNumber", "employees").get();
 
-// { property1: 'property2' }
+// Outputs
+
+{
+  address: 'X Street',
+  location: 'Spain',
+  employees: 10
+}
 ```

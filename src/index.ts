@@ -1,3 +1,5 @@
+import { set, get } from 'lodash';
+
 type Class<T> = new (...args: any[]) => T;
 
 type MapperGlobals = {
@@ -77,7 +79,8 @@ const Mapper = function () {
 
   function applyAliases() {
     _aliases.forEach((alias) => {
-      _result[alias.target] = _sourceObj[alias.source];
+      const { source, target } = alias;
+      set(_result, target, get(_sourceObj, source));
     });
   }
 

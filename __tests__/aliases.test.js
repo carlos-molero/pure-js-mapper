@@ -1,21 +1,47 @@
 import Mapper from '../src/index';
-import { faker } from '@faker-js/faker';
-import BasicSuperMarketDto from './__dtos__/BasicSuperMarketDto';
+import SuperMarketDto from './__dtos__/SuperMarketDto';
 
-describe.only('[UNIT] - Covers the use of setAlias() chain function', function () {
-  it('', function () {
+const supermarket = {
+  address: '1',
+  location: '2',
+  employeeNumber: '4',
+};
+
+describe('[UNIT] - Covers the use of setAlias() chain function', function () {
+  it('Basic alias', function () {
     const dto = Mapper()
-      .map(
-        {
-          address: faker.address.street(),
-          employeeNumber: faker.random.numeric(),
-          location: faker.address.country(),
-          systemPassword: faker.datatype.uuid(),
-        },
-        BasicSuperMarketDto,
-      )
+      .map({ ...supermarket }, SuperMarketDto)
       .setAlias('employeeNumber', 'employees')
       .get();
     expect(dto.employees).not.toBeUndefined();
+    expect(dto.employees).toBe('4');
+  });
+  it('Nested alias', function () {
+    delete supermarket.employeeNumber;
+    supermarket.other = {
+      employeeNumber: '4',
+    };
+
+    const dto = Mapper()
+      .map({ ...supermarket }, SuperMarketDto)
+      .setAlias('other.employeeNumber', 'employees')
+      .get();
+    expect(dto.employees).not.toBeUndefined();
+    expect(dto.employees).toBe('4');
+  });
+  it('2o nesting level', function () {
+    delete supermarket.other;
+    supermarket.other = {
+      data: {
+        employeeNumber: '4',
+      },
+    };
+
+    const dto = Mapper()
+      .map({ ...supermarket }, SuperMarketDto)
+      .setAlias('other.data.employeeNumber', 'employees')
+      .get();
+    expect(dto.employees).not.toBeUndefined();
+    expect(dto.employees).toBe('4');
   });
 });

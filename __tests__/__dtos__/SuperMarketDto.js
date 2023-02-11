@@ -1,4 +1,4 @@
-export default class BasicSuperMarketDto {
+export default class SuperMarketDto {
   constructor({ address, location, employees }) {
     this.address = address;
     this.location = location;

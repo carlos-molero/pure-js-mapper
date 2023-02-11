@@ -1,4 +1,4 @@
-export default class BasicEmployeeDto {
+export default class EmployeeDto {
   constructor({ name, surnames, email, phone, managers }) {
     this.name = name;
     this.surnames = surnames;
