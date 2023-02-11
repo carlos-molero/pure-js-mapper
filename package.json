@@ -1,6 +1,6 @@
 {
   "name": "@carlosmta/pure-js-mapper",
-  "version": "0.1.0-beta",
+  "version": "0.2.0-beta",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "repository": "git@github.com:carlos-molero/pure-js-mapper.git",
@@ -26,6 +26,7 @@
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "@types/jest": "^29.4.0",
+    "@types/lodash": "^4.14.191",
     "jest": "^29.4.2",
     "prettier": "^2.8.4",
     "ts-jest": "^29.0.5",
@@ -36,5 +37,8 @@
   "files": [
     "lib/**/*",
     "LICENSE.md"
-  ]
+  ],
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
 }

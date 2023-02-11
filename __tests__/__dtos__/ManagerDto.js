@@ -1,4 +1,4 @@
-export default class BasicManagerDto {
+export default class ManagerDto {
   constructor({ name, surnames, username, address }) {
     this.name = name;
     this.surnames = surnames;

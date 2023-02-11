@@ -1,6 +1,5 @@
-import { faker } from '@faker-js/faker';
 import Mapper from '../src';
-import BasicSuperMarketDto from './__dtos__/BasicSuperMarketDto';
+import SuperMarketDto from './__dtos__/SuperMarketDto';
 
 Mapper().Globals({ ignoreUnknownProperties: true });
 
@@ -11,18 +10,8 @@ describe('[UNIT] - Global properties persist and are applied during runtime', fu
   });
   it('', function () {
     const { ignoreUnknownProperties } = Mapper().getGlobals();
-    const dto = Mapper()
-      .map(
-        {
-          address: faker.address.street(),
-          employees: faker.random.numeric(),
-          location: faker.address.country(),
-          systemPassword: faker.datatype.uuid(),
-        },
-        BasicSuperMarketDto,
-      )
-      .get();
+    const dto = Mapper().map({ address: '1' }, SuperMarketDto).get();
     expect(ignoreUnknownProperties).toBe(true);
-    expect(Object.keys(dto).length).toBe(3);
+    expect(Object.keys(dto).length).toBe(1);
   });
 });

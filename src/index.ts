@@ -1,3 +1,5 @@
+import { set, get } from 'lodash';
+
 type Class<T> = new (...args: any[]) => T;
 
 type MapperGlobals = {
@@ -75,9 +77,13 @@ const Mapper = function () {
     return obj;
   }
 
+  /**
+   * Applies the aliases, if any, using lodash
+   */
   function applyAliases() {
     _aliases.forEach((alias) => {
-      _result[alias.target] = _sourceObj[alias.source];
+      const { source, target } = alias;
+      set(_result, target, get(_sourceObj, source));
     });
   }
 
@@ -115,12 +121,12 @@ const Mapper = function () {
       return this;
     },
     /**
-     * Sets an alias, it won't apply to to mappings. This function is useful
+     * Sets an alias. This function is useful
      * when some properties of the source object have a different name than
      * their corresponding mapping to the target object.
      *
-     * @param {string} source the name of the property in the source object
-     * @param {string} target the name of the property in the target object
+     * @param {string} source the path to the value in the source object
+     * @param {string} target the path to the value in the target object
      */
     setAlias(source: string, target: string) {
       _aliases.push({ source, target });
