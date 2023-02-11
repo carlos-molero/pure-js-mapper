@@ -1,14 +1,27 @@
 type Class<T> = new (...args: any[]) => T;
+
 type MapperGlobals = {
   ignoreUnknownProperties?: boolean;
+};
+
+type Mapping = {
+  property: string;
+  target: Class<any>;
+};
+
+type Alias = {
+  source: string;
+  target: string;
 };
 
 let _globals: MapperGlobals = {};
 
 const Mapper = function () {
+  let _sourceObj: Record<any, any>;
   let _result: Record<any, any>;
   let _ignoreUnknownProperties = false;
-  const _mappings: { property: string; target: any }[] = [];
+  const _aliases: Alias[] = [];
+  const _mappings: Mapping[] = [];
 
   /**
    * Checks if a property inside a given object is an object itself.
@@ -62,6 +75,12 @@ const Mapper = function () {
     return obj;
   }
 
+  function applyAliases() {
+    _aliases.forEach((alias) => {
+      _result[alias.target] = _sourceObj[alias.source];
+    });
+  }
+
   return {
     /**
      * Sets the global configuration for the Mapper() function.
@@ -91,7 +110,20 @@ const Mapper = function () {
      * @returns {Mapper} Mapper
      */
     map(objA: Record<any, any>, objB: Class<any>) {
+      _sourceObj = objA;
       _result = new objB({ ...objA });
+      return this;
+    },
+    /**
+     * Sets an alias, it won't apply to to mappings. This function is useful
+     * when some properties of the source object have a different name than
+     * their corresponding mapping to the target object.
+     *
+     * @param {string} source the name of the property in the source object
+     * @param {string} target the name of the property in the target object
+     */
+    setAlias(source: string, target: string) {
+      _aliases.push({ source, target });
       return this;
     },
     /**
@@ -121,6 +153,10 @@ const Mapper = function () {
      * @returns {Record<any,any>} result
      */
     get(): Record<any, any> {
+      if (_aliases.length > 0) {
+        applyAliases();
+      }
+
       if (_mappings.length > 0) {
         applyMappings();
       }
