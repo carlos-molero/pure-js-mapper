@@ -1,7 +1,7 @@
 # Pure JS Mapper
 
 [![Tests](https://github.com/carlos-molero/pure-js-mapper/actions/workflows/test.yml/badge.svg)](https://github.com/carlos-molero/pure-js-mapper/actions/workflows/test.yml)
-![Version](https://img.shields.io/badge/Version-0.2.0--beta-blue)
+![Version](https://img.shields.io/badge/Version-1.0.0-blue)
 
 Pure JS Mapper, as its name suggests, is a mapping library for converting entities to DTO classes and vice versa that can be used in javascript projects.
 
