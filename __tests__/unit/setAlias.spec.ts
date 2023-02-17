@@ -1,5 +1,5 @@
-import Mapper from '../src/index';
-import SuperMarketDto from './__dtos__/SuperMarketDto';
+import Mapper from '../../src/index';
+import SuperMarketDto from '../__dtos__/SuperMarketDto';
 
 const supermarket = {
   address: '1',
@@ -12,26 +12,26 @@ describe('[UNIT] - Covers the use of setAlias() chain function', function () {
     const dto = Mapper()
       .map({ ...supermarket }, SuperMarketDto)
       .setAlias('employeeNumber', 'employees')
-      .get();
+      .get<SuperMarketDto>();
     expect(dto.employees).not.toBeUndefined();
     expect(dto.employees).toBe('4');
   });
   it('Nested alias', function () {
-    delete supermarket.employeeNumber;
-    supermarket.other = {
+    delete (supermarket as any).employeeNumber;
+    (supermarket as any).other = {
       employeeNumber: '4',
     };
 
     const dto = Mapper()
       .map({ ...supermarket }, SuperMarketDto)
       .setAlias('other.employeeNumber', 'employees')
-      .get();
+      .get<SuperMarketDto>();
     expect(dto.employees).not.toBeUndefined();
     expect(dto.employees).toBe('4');
   });
   it('2o nesting level', function () {
-    delete supermarket.other;
-    supermarket.other = {
+    delete (supermarket as any).other;
+    (supermarket as any).other = {
       data: {
         employeeNumber: '4',
       },
@@ -40,7 +40,7 @@ describe('[UNIT] - Covers the use of setAlias() chain function', function () {
     const dto = Mapper()
       .map({ ...supermarket }, SuperMarketDto)
       .setAlias('other.data.employeeNumber', 'employees')
-      .get();
+      .get<SuperMarketDto>();
     expect(dto.employees).not.toBeUndefined();
     expect(dto.employees).toBe('4');
   });
