@@ -48,7 +48,7 @@ type Mapper = {
   setAlias(source: string, target: string): Mapper;
   setMapping(key: string, obj: Class<any>): Mapper;
   ignoreUnknownProperties(): Mapper;
-  get(): Record<any, any>;
+  get<T>(): T;
 };
 
 let _globals: MapperGlobals = {};
@@ -193,7 +193,7 @@ const Mapper = function (): Mapper {
      *
      * @returns {Record<any,any>} result
      */
-    get(): Record<any, any> {
+    get<T>(): T {
       if (_aliases.length > 0) {
         applyAliases();
       }
