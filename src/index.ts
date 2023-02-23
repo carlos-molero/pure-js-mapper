@@ -80,7 +80,7 @@ const Mapper = function (): Mapper {
     const keys = Object.keys(obj);
     keys.forEach((key) => {
       const val = obj[key];
-      if (!val) {
+      if (typeof val === 'undefined' || val === null) {
         delete obj[key];
       } else if (isObject(val)) {
         obj[key] = deleteUndefinedOrNullProperties(val);
