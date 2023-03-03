@@ -64,7 +64,8 @@ const Mapper = function (): Mapper {
    * Checks if a property inside a given object is an object itself.
    *
    * @param {any} property
-   * @returns {boolean} true or false
+   *
+   * @returns {boolean} boolean
    */
   function isObject(property: any): boolean {
     return typeof property === 'object';
@@ -74,7 +75,8 @@ const Mapper = function (): Mapper {
    * Deletes undefined or null properties recursively from an object.
    *
    * @param {Record<any, any>} obj
-   * @returns {Record<any, any>} the modified object
+   *
+   * @returns {Record<any, any>} Record<any, any>
    */
   function deleteUndefinedOrNullProperties(obj: Record<any, any> = _result): Record<any, any> {
     const keys = Object.keys(obj);
@@ -93,7 +95,8 @@ const Mapper = function (): Mapper {
    * Maps nested properties to the given mappings DTO classes recursively.
    *
    * @param {Record<any, any>} obj
-   * @returns {Record<any, any>} the modified object
+   *
+   * @returns {Record<any, any>} Record<any, any>
    */
   function applyMappings(obj: Record<any, any> = _result): Record<any, any> {
     const keys = Object.keys(obj);
@@ -126,8 +129,6 @@ const Mapper = function (): Mapper {
     /**
      * Sets the global configuration for the Mapper() function.
      * This configuration will persist through function calls.
-     *
-     * @param globals.ignoreUnknownProperties
      */
     Globals(globals: MapperGlobals): void {
       _globals = {
@@ -135,19 +136,22 @@ const Mapper = function (): Mapper {
         ...globals,
       };
     },
+
     /**
      * Returns the global configuration for the Mapper() function.
      *
-     * @returns {MapperGlobals} Mapper global options.
+     * @returns {MapperGlobals} MapperGlobals
      */
     getGlobals(): MapperGlobals {
       return _globals;
     },
+
     /**
      * Maps an object to another.
      *
-     * @param objA Can be an initialized class instance or an object.
-     * @param objB Must be a class reference.
+     * @param {Record<any,any>|Class<any>} objA Can be an initialized class instance or an object
+     * @param {Class<any>} objB Must be a class reference
+     *
      * @returns {Mapper} Mapper
      */
     map(objA: Record<any, any>, objB: Class<any>): Mapper {
@@ -155,30 +159,38 @@ const Mapper = function (): Mapper {
       _result = new objB({ ...objA });
       return this;
     },
+
     /**
      * Sets an alias. This function is useful
-     * when some properties of the source object have a different name than
-     * their corresponding mapping to the target object.
+     * when some properties of the source object have
+     * a different name than their corresponding
+     * mapping to the target object.
      *
      * @param {string} source the path to the value in the source object
      * @param {string} target the path to the value in the target object
+     *
+     * @returns {Mapper} Mapper
      */
     setAlias(source: string, target: string): Mapper {
       _aliases.push({ source, target });
       return this;
     },
+
     /**
-     * Sets a mapping, useful if you need to map subproperties of your object to given DTO classes.
-     * You can chain as many mappings as you want.
+     * Sets a mapping, useful if you need to map subproperties
+     * of your object to a given class. You can chain as
+     * many mappings as you want.
      *
-     * @param {string} key The key of the property that should be mapped to the passed DTO class object.
-     * @param {string} obj Must be a class reference.
+     * @param {string} key The key of the property that should be mapped
+     * @param {Class<any>} obj Must be a class reference
+     *
      * @returns {Mapper} Mapper
      */
     setMapping(key: string, obj: Class<any>): Mapper {
       _mappings.push({ property: key, target: obj });
       return this;
     },
+
     /**
      * Sets the ignoreUnknownProperties option to true for this mapping.
      *
@@ -188,10 +200,11 @@ const Mapper = function (): Mapper {
       _ignoreUnknownProperties = true;
       return this;
     },
+
     /**
      * Gets the mapping result.
      *
-     * @returns {Record<any,any>} result
+     * @returns {Record<any,any>} Record<any,any>
      */
     get<T>(): T {
       if (_aliases.length > 0) {
